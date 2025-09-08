@@ -1,6 +1,6 @@
 <img alt="Logo de React Native" src="./assets/images/react-logo@3x.png" height=200 width=200 />
 
-# Calculator
+# Login Skeleton App
 
 Esto es un proyecto de [Expo](https://expo.dev) creado con [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
