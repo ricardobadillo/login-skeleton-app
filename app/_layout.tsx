@@ -1,29 +1,51 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { configureReanimatedLogger } from "react-native-reanimated";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useFonts } from "expo-font";
+import { SplashScreen, Stack } from "expo-router";
+
+import { useTheme } from "@/presentation/themes/context";
+import { ContainerTheme } from "@/presentation/themes/provider";
+
+import "./global.css";
+
+SplashScreen.preventAutoHideAsync();
+
+configureReanimatedLogger({
+  strict: false,
+});
+
+function ThemedContent() {
+  const { getThemeColorByVariable } = useTheme();
+  const backgroundColor = getThemeColorByVariable("background");
+
+  return (
+    <GestureHandlerRootView style={{ backgroundColor, flex: 1 }}>
+      <Stack
+        screenOptions={{
+          contentStyle: { backgroundColor },
+          headerShown: false,
+        }}
+      ></Stack>
+    </GestureHandlerRootView>
+  );
+}
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    KanitThin: require("../assets/fonts/Kanit-Thin.ttf"),
+    KanitRegular: require("../assets/fonts/Kanit-Regular.ttf"),
+    KanitBold: require("../assets/fonts/Kanit-Bold.ttf"),
   });
 
   if (!loaded) {
-    // Async font loading only occurs in development.
+    SplashScreen.hideAsync();
     return null;
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <ContainerTheme>
+      <ThemedContent />
+    </ContainerTheme>
   );
 }
